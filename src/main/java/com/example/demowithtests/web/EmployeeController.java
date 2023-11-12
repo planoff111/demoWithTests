@@ -109,7 +109,7 @@ public class EmployeeController {
 
     @DeleteMapping("/users/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeEmployeeById(@PathVariable Integer id) {
+    public void removeEmployeeById(@PathVariable Integer id) throws Exception {
         employeeService.removeById(id);
     }
 

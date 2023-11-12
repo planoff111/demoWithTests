@@ -40,4 +40,8 @@ public final class Employee {
     @OneToOne  (cascade = CascadeType.ALL)
     @JoinColumn(name = "document_id", referencedColumnName = "id")
     private Document document;
+
+    private Boolean isDeleted = Boolean.FALSE;
+    @Column(name = "verificated")
+    private Boolean isVerificated = Boolean.FALSE;
 }

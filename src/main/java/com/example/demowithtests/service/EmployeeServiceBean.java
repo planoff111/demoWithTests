@@ -48,7 +48,11 @@ public class EmployeeServiceBean implements EmployeeService {
 
     @Override
     public List<Employee> getAll() {
-        return employeeRepository.findAll();
+        return employeeRepository.findAll()
+                .stream()
+                .filter(emp-> emp.getIsDeleted() == Boolean.FALSE)
+                .collect(Collectors.toList());
+
     }
 
     @Override
@@ -64,14 +68,15 @@ public class EmployeeServiceBean implements EmployeeService {
         var employee = employeeRepository.findById(id)
                 // .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
                 .orElseThrow(ResourceNotFoundException::new);
-        /* if (employee.getIsDeleted()) {
+         if (employee.getIsDeleted() == Boolean.TRUE) {
             throw new EntityNotFoundException("Employee was deleted with id = " + id);
-        }*/
+        }
         return employee;
     }
 
     @Override
     public Employee updateById(Integer id, Employee employee) {
+
         return employeeRepository.findById(id)
                 .map(entity -> {
                     entity.setName(employee.getName());
@@ -83,14 +88,16 @@ public class EmployeeServiceBean implements EmployeeService {
     }
 
     @Override
-    public void removeById(Integer id) {
-        //repository.deleteById(id);
+    public void removeById(Integer id)  {
         var employee = employeeRepository.findById(id)
                 // .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
                 .orElseThrow(ResourceWasDeletedException::new);
-        //employee.setIsDeleted(true);
-        employeeRepository.delete(employee);
-        //repository.save(employee);
+        if (employee.getIsDeleted() == Boolean.TRUE) {
+            throw new ResourceWasDeletedException() ;
+        } else
+            employee.setIsDeleted(Boolean.TRUE);
+        employeeRepository.save(employee);
+
     }
 
     @Override
