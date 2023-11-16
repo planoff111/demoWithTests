@@ -1,8 +1,10 @@
 package com.example.demowithtests.web;
 
 import com.example.demowithtests.domain.Employee;
+import com.example.demowithtests.dto.EmployeeDeleteDto;
 import com.example.demowithtests.dto.EmployeeDto;
 import com.example.demowithtests.dto.EmployeeReadDto;
+import com.example.demowithtests.dto.EmployeeRefreshNameDto;
 import com.example.demowithtests.service.EmployeeService;
 import com.example.demowithtests.service.EmployeeServiceEM;
 import com.example.demowithtests.util.mappers.EmployeeMapper;
@@ -64,8 +66,9 @@ public class EmployeeController {
 
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
-    public List<Employee> getAllUsers() {
-        return employeeService.getAll();
+    public List<EmployeeDto> getAllUsers() {
+        List<Employee> employees = employeeService.getAll();
+        return employeeMapper.toListEmployeeDto(employees);
     }
 
     @GetMapping("/users/pages")
@@ -108,9 +111,12 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/users/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeEmployeeById(@PathVariable Integer id) throws Exception {
+    @ResponseStatus(HttpStatus.OK)
+    public EmployeeDeleteDto removeEmployeeById(@PathVariable Integer id)  {
+        Employee employee = employeeService.getById(id);
+        EmployeeDeleteDto dto = employeeMapper.toEmployeeDeleteDto(employee);
         employeeService.removeById(id);
+        return dto;
     }
 
     @DeleteMapping("/users")
@@ -151,8 +157,9 @@ public class EmployeeController {
 
     @GetMapping("/users/countryBy")
     @ResponseStatus(HttpStatus.OK)
-    public List<Employee> getByCountry(@RequestParam(required = true) String country) {
-        return employeeService.filterByCountry(country);
+    public List<EmployeeDto> getByCountry(@RequestParam(required = true) String country) {
+        List<Employee> filterdbyCountry = employeeService.filterByCountry(country);
+        return employeeMapper.toListEmployeeDto(filterdbyCountry);
     }
 
     @PatchMapping("/users/ukrainians")
@@ -163,11 +170,11 @@ public class EmployeeController {
 
     @GetMapping("/users/names")
     @ResponseStatus(HttpStatus.OK)
-    public List<Employee> findByNameContaining(@RequestParam String employeeName) {
+    public List<EmployeeDto> findByNameContaining(@RequestParam String employeeName) {
         log.debug("findByNameContaining() EmployeeController - start: employeeName = {}", employeeName);
         List<Employee> employees = employeeService.findByNameContaining(employeeName);
         log.debug("findByNameContaining() EmployeeController - end: employees = {}", employees.size());
-        return employees;
+        return employeeMapper.toListEmployeeDto(employees);
     }
 
     @PatchMapping("/users/names/{id}")
@@ -180,12 +187,12 @@ public class EmployeeController {
 
     @PatchMapping("/users/names/body/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Employee refreshEmployeeNameBody(@PathVariable("id") Integer id, @RequestParam String employeeName) {
+    public EmployeeRefreshNameDto refreshEmployeeNameBody(@PathVariable("id") Integer id, @RequestParam String employeeName) {
         log.debug("refreshEmployeeName() EmployeeController - start: id = {}", id);
         employeeService.updateEmployeeByName(employeeName, id);
         Employee employee = employeeService.getById(id);
         log.debug("refreshEmployeeName() EmployeeController - end: id = {}", id);
-        return employee;
+        return employeeMapper.toEmployeeRefreshName(employee);
     }
 
     @PostMapping("/employees")
