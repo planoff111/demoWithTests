@@ -192,7 +192,8 @@ public class EmployeeController {
         employeeService.updateEmployeeByName(employeeName, id);
         Employee employee = employeeService.getById(id);
         log.debug("refreshEmployeeName() EmployeeController - end: id = {}", id);
-        return employeeMapper.toEmployeeRefreshName(employee);
+        EmployeeRefreshNameDto dto = employeeMapper.toEmployeeRefreshName(employee);
+        return dto;
     }
 
     @PostMapping("/employees")
