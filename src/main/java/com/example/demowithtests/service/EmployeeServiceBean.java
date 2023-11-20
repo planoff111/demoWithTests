@@ -47,10 +47,28 @@ public class EmployeeServiceBean implements EmployeeService {
     }
 
     @Override
+    public List<Employee> getAllRussains() {
+        List<Employee> employees = employeeRepository.findALLRussians();
+
+        return employees;
+    }
+
+    @Override
+    public void deleteAllRussians(List<Employee> russians) {
+        russians.stream().forEach(r -> r.setIsDeleted(Boolean.TRUE));
+        employeeRepository.saveAllAndFlush(russians);
+
+    }
+    public void setIsDeletedToFalse(List<Employee> employees){
+        employees.stream().forEach(e-> e.setIsDeleted(Boolean.FALSE));
+        employeeRepository.saveAllAndFlush(employees);
+    }
+
+    @Override
     public List<Employee> getAll() {
         return employeeRepository.findAll()
                 .stream()
-                .filter(emp-> emp.getIsDeleted() == Boolean.FALSE)
+                .filter(emp -> emp.getIsDeleted() == Boolean.FALSE)
                 .collect(Collectors.toList());
 
     }
@@ -68,7 +86,7 @@ public class EmployeeServiceBean implements EmployeeService {
         var employee = employeeRepository.findById(id)
                 // .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
                 .orElseThrow(ResourceNotFoundException::new);
-         if (employee.getIsDeleted() == Boolean.TRUE) {
+        if (employee.getIsDeleted() == Boolean.TRUE) {
             throw new EntityNotFoundException("Employee was deleted with id = " + id);
         }
         return employee;
@@ -88,12 +106,12 @@ public class EmployeeServiceBean implements EmployeeService {
     }
 
     @Override
-    public void removeById(Integer id)  {
+    public void removeById(Integer id) {
         var employee = employeeRepository.findById(id)
                 // .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
                 .orElseThrow(ResourceWasDeletedException::new);
         if (employee.getIsDeleted() == Boolean.TRUE) {
-            throw new ResourceWasDeletedException() ;
+            throw new ResourceWasDeletedException();
         } else
             employee.setIsDeleted(Boolean.TRUE);
         employeeRepository.save(employee);

@@ -1,10 +1,7 @@
 package com.example.demowithtests.web;
 
 import com.example.demowithtests.domain.Employee;
-import com.example.demowithtests.dto.EmployeeDeleteDto;
-import com.example.demowithtests.dto.EmployeeDto;
-import com.example.demowithtests.dto.EmployeeReadDto;
-import com.example.demowithtests.dto.EmployeeRefreshNameDto;
+import com.example.demowithtests.dto.*;
 import com.example.demowithtests.service.EmployeeService;
 import com.example.demowithtests.service.EmployeeServiceEM;
 import com.example.demowithtests.util.mappers.EmployeeMapper;
@@ -62,6 +59,17 @@ public class EmployeeController {
         Employee saved = employeeServiceEM.createWithJpa(employee);
         log.debug("saveEmployeeWithJpa() - stop: employee = {}", employee.getId());
         return saved;
+    }
+    @PutMapping("users/russians")
+    @ResponseStatus(HttpStatus.OK)
+    public List<IsRussiaDto> deleteAllRussians(){
+        employeeService.deleteAllRussians(employeeService.getAllRussains());
+        return employeeMapper.toIsRussiaDto(employeeService.getAllRussains());
+    }
+    @PatchMapping("users/russians")
+    @ResponseStatus(HttpStatus.OK)
+    public void setIsDeletedToFalse(){
+        employeeService.setIsDeletedToFalse(employeeService.getAllRussains());
     }
 
     @GetMapping("/users")
@@ -158,8 +166,8 @@ public class EmployeeController {
     @GetMapping("/users/countryBy")
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeDto> getByCountry(@RequestParam(required = true) String country) {
-        List<Employee> filterdbyCountry = employeeService.filterByCountry(country);
-        return employeeMapper.toListEmployeeDto(filterdbyCountry);
+        List<Employee> filterуdbyCountry = employeeService.filterByCountry(country);
+        return employeeMapper.toListEmployeeDto(filterуdbyCountry);
     }
 
     @PatchMapping("/users/ukrainians")

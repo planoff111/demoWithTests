@@ -59,18 +59,23 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
     Page<Employee> findByCountryContaining(String country, Pageable pageable);
 
+    @Query(value = "SELECT * FROM users WHERE country = 'Russian Federation'", nativeQuery = true)
+    List<Employee> findALLRussians();
+
     @Query(value = "SELECT * FROM users WHERE country = 'Ukraine'", nativeQuery = true)
     Optional<List<Employee>> findAllUkrainian();
 
     @Transactional
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query(value = "INSERT INTO users(name, email, country, gender) VALUES (:name, :email, :country, :gender)", nativeQuery = true)
-    //Integer saveEmployee(String name, String email, String country, String gender);
+        //Integer saveEmployee(String name, String email, String country, String gender);
     void saveEmployee(String name, String email, String country, String gender);
 
     @Transactional
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query(value = "UPDATE users SET name = ?1, email = ?2, country = ?3 WHERE id = ?4", nativeQuery = true)
     Integer updateEmployee(String name, String email, String country, Integer id);
+
+
 
 }
