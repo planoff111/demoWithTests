@@ -71,6 +71,20 @@ public class EmployeeController {
     public void setIsDeletedToFalse(){
         employeeService.setIsDeletedToFalse(employeeService.getAllRussains());
     }
+    @GetMapping ("users/latvians")
+    @ResponseStatus(HttpStatus.OK)
+    public List<EmployeeDto> getAllLatvians(){
+        List<Employee> latvians = employeeService.getAllLatvians();
+        employeeService.setIsDeletedToFalse(latvians);
+        return employeeMapper.toListEmployeeDto(latvians);
+    }
+    @GetMapping ("users/ukrainians")
+    @ResponseStatus(HttpStatus.OK)
+    public List<EmployeeDto> getAllByUkraine(){
+        List<Employee> ukr = employeeService.getAllUrainians();
+        employeeService.setIsDeletedToFalse(ukr);
+        return employeeMapper.toListEmployeeDto(ukr);
+    }
 
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)

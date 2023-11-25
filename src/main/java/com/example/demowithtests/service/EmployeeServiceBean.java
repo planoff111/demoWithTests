@@ -53,6 +53,21 @@ public class EmployeeServiceBean implements EmployeeService {
         return employees;
     }
 
+    public List<Employee> getAllUrainians(){
+        return employeeRepository.findAllUkrainian()
+                .stream()
+                .flatMap(emp -> emp.stream().filter(e-> e.getIsDeleted() ==(Boolean.FALSE)))
+                .collect(Collectors.toList());
+    }
+
+    public List<Employee> getAllLatvians(){
+        return employeeRepository.findAllLatvians()
+                .stream()
+                .filter(ent -> ent.getIsDeleted() == (Boolean.FALSE))
+                .collect(Collectors.toList());
+
+    }
+
     @Override
     public void deleteAllRussians(List<Employee> russians) {
         russians.stream().forEach(r -> r.setIsDeleted(Boolean.TRUE));

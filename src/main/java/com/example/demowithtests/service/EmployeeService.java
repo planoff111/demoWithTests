@@ -29,6 +29,8 @@ public interface EmployeeService {
 
     public void deleteAllRussians(List<Employee> russians);
     public void setIsDeletedToFalse(List<Employee> employees);
+    List<Employee> getAllLatvians();
+    public List<Employee> getAllUrainians();
 
 
     //Page<Employee> findByCountryContaining(String country, Pageable pageable);
