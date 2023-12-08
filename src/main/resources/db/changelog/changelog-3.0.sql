@@ -1,0 +1,1 @@
+ALTER TABLE documents add if not exists date_add_document boolean

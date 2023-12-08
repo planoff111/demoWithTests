@@ -1,0 +1,1 @@
+ALTER TABLE documents add if not exists is_deleted boolean
