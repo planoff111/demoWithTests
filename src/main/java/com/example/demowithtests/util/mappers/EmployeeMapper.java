@@ -1,5 +1,6 @@
 package com.example.demowithtests.util.mappers;
 
+import com.example.demowithtests.domain.Document;
 import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.dto.*;
 import org.mapstruct.Mapper;
@@ -17,9 +18,12 @@ public interface EmployeeMapper {
     List<EmployeeDto> toListEmployeeDto(List<Employee> employees);
 
     Employee toEmployee(EmployeeDto employeeDto);
+
     EmployeeDeleteDto toEmployeeDeleteDto(Employee employee);
 
     EmployeeRefreshNameDto toEmployeeRefreshName(Employee employee);
 
     List<IsRussiaDto> toIsRussiaDto(List<Employee> employees);
+
+
 }

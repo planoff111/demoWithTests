@@ -1,12 +1,16 @@
 package com.example.demowithtests.web.document;
 
 import com.example.demowithtests.domain.Document;
+import com.example.demowithtests.dto.DocumentDeleteDto;
 import com.example.demowithtests.service.document.DocumentService;
+import com.example.demowithtests.util.mappers.DocumentMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class DocumentController implements DocumentResource {
 
     private final DocumentService documentService;
+    private final DocumentMapper documentMapper;
 
     /**
      * @param document
@@ -24,7 +29,8 @@ public class DocumentController implements DocumentResource {
     @PostMapping("/documents")
     @ResponseStatus(HttpStatus.CREATED)
     public Document createDocument(@RequestBody Document document) {
-        return documentService.create(document);
+        Document saved = documentService.create(document);
+        return saved;
     }
 
     /**
@@ -36,5 +42,12 @@ public class DocumentController implements DocumentResource {
     @ResponseStatus(HttpStatus.OK)
     public Document getDocumentById(@PathVariable Integer id) {
         return documentService.getById(id);
+    }
+
+    @DeleteMapping("/documents/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public DocumentDeleteDto deleteDocument(@PathVariable Integer id) {
+        Document deleted = documentService.setIsDeletedTrue(id);
+        return documentMapper.toDeleteDto(deleted);
     }
 }

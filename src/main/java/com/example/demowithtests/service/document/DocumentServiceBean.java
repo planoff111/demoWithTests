@@ -2,11 +2,13 @@ package com.example.demowithtests.service.document;
 
 import com.example.demowithtests.domain.Document;
 import com.example.demowithtests.repository.DocumentRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,8 +23,7 @@ public class DocumentServiceBean implements DocumentService {
      */
     @Override
     public Document create(Document document) {
-        document.setExpireDate(LocalDateTime.now().plusYears(5));
-        return documentRepository.save(document);
+        return documentRepository.saveAndFlush(document);
     }
 
     /**
@@ -56,4 +57,16 @@ public class DocumentServiceBean implements DocumentService {
     public Document addImage(Integer passportId, Integer imageId) {
         return null;
     }
+
+    @Override
+    public Document setIsDeletedTrue(Integer id) {
+        var document = documentRepository.findById(id)
+                .map(entity -> {
+                    entity.setDeleteDate(LocalDateTime.now());
+                    entity.setIsDeleted(Boolean.TRUE);
+                    return documentRepository.saveAndFlush(entity);
+                }).orElseThrow(() -> new EntityNotFoundException("Document not found with id = " + id));
+        return document;
+    }
+
 }
