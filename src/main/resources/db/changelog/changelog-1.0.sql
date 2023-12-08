@@ -20,6 +20,3 @@ create table if not exists public.addresses
         constraint fk_address_employee references public.users
 
 );
-
-
-

@@ -33,6 +33,11 @@ public final class Document {
     @OneToOne(mappedBy = "document")
     private Employee employee;
 
+    private Boolean isDeleted = Boolean.FALSE;
+    @Column(name = "date_add_document")
+    private LocalDateTime dateAddDocument = LocalDateTime.now();
+
+
     /*@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image image;*/
