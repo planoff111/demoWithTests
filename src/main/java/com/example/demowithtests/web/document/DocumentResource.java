@@ -7,5 +7,5 @@ public interface DocumentResource {
 
     Document createDocument(Document document);
 
-    Document getDocumentById(Integer id);
+
 }

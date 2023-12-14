@@ -2,6 +2,7 @@ package com.example.demowithtests.web.document;
 
 import com.example.demowithtests.domain.Document;
 import com.example.demowithtests.dto.DocumentDeleteDto;
+import com.example.demowithtests.dto.DocumentDto;
 import com.example.demowithtests.service.document.DocumentService;
 import com.example.demowithtests.util.mappers.DocumentMapper;
 import lombok.AllArgsConstructor;
@@ -37,11 +38,19 @@ public class DocumentController implements DocumentResource {
      * @param id
      * @return
      */
-    @Override
+
     @GetMapping("/documents/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Document getDocumentById(@PathVariable Integer id) {
         return documentService.getById(id);
+    }
+
+    @GetMapping("/documents/history/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public DocumentDto getDocumentByIdHistory(@PathVariable Integer id) {
+        Document document = documentService.getById(id);
+        DocumentDto documentDto = documentMapper.toDocumentDto(document);
+        return documentDto;
     }
 
     @DeleteMapping("/documents/{id}")

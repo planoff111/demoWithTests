@@ -25,5 +25,7 @@ public interface EmployeeMapper {
 
     List<IsRussiaDto> toIsRussiaDto(List<Employee> employees);
 
+    EmployeDeletedDocumentDto toEmployeDeletedDocumentDto (Employee employee);
+
 
 }

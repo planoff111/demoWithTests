@@ -64,27 +64,31 @@ public class EmployeeController {
         log.debug("saveEmployeeWithJpa() - stop: employee = {}", employee.getId());
         return saved;
     }
+
     @PutMapping("users/russians")
     @ResponseStatus(HttpStatus.OK)
-    public List<IsRussiaDto> deleteAllRussians(){
+    public List<IsRussiaDto> deleteAllRussians() {
         employeeService.deleteAllRussians(employeeService.getAllRussains());
         return employeeMapper.toIsRussiaDto(employeeService.getAllRussains());
     }
+
     @PatchMapping("users/russians")
     @ResponseStatus(HttpStatus.OK)
-    public void setIsDeletedToFalse(){
+    public void setIsDeletedToFalse() {
         employeeService.setIsDeletedToFalse(employeeService.getAllRussains());
     }
-    @GetMapping ("users/latvians")
+
+    @GetMapping("users/latvians")
     @ResponseStatus(HttpStatus.OK)
-    public List<EmployeeDto> getAllLatvians(){
+    public List<EmployeeDto> getAllLatvians() {
         List<Employee> latvians = employeeService.getAllLatvians();
         employeeService.setIsDeletedToFalse(latvians);
         return employeeMapper.toListEmployeeDto(latvians);
     }
-    @GetMapping ("users/ukrainians")
+
+    @GetMapping("users/ukrainians")
     @ResponseStatus(HttpStatus.OK)
-    public List<EmployeeDto> getAllByUkraine(){
+    public List<EmployeeDto> getAllByUkraine() {
         List<Employee> ukr = employeeService.getAllUrainians();
         employeeService.setIsDeletedToFalse(ukr);
         return employeeMapper.toListEmployeeDto(ukr);
@@ -126,6 +130,15 @@ public class EmployeeController {
         return dto;
     }
 
+    @DeleteMapping("/users/documents/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public EmployeDeletedDocumentDto deleteDocument(@PathVariable Integer id) {
+        Employee deleted = employeeService.deleteDocument(id);
+        var deletedDocument = employeeMapper.toEmployeDeletedDocumentDto(deleted);
+        return deletedDocument;
+
+    }
+
     @PutMapping("/users/{id}")
     @ResponseStatus(HttpStatus.OK)
     public EmployeeReadDto refreshEmployee(@PathVariable("id") Integer id, @RequestBody EmployeeDto employee) {
@@ -138,7 +151,7 @@ public class EmployeeController {
 
     @DeleteMapping("/users/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public EmployeeDeleteDto removeEmployeeById(@PathVariable Integer id)  {
+    public EmployeeDeleteDto removeEmployeeById(@PathVariable Integer id) {
         Employee employee = employeeService.getById(id);
         EmployeeDeleteDto dto = employeeMapper.toEmployeeDeleteDto(employee);
         employeeService.removeById(id);

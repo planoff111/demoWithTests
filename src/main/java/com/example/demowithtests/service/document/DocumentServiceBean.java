@@ -32,8 +32,9 @@ public class DocumentServiceBean implements DocumentService {
      */
     @Override
     public Document getById(Integer id) {
-        return documentRepository.findById(id).orElseThrow();
+        return documentRepository.findByIdByUserBeforeDeleting(id);
     }
+
 
     /**
      * @param id

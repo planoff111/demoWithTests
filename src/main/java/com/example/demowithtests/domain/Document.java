@@ -1,6 +1,7 @@
 package com.example.demowithtests.domain;
 
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -34,6 +35,7 @@ public final class Document {
     private LocalDateTime dateAddDocument = LocalDateTime.now();
     @Column(name = "date_delete_document")
     private LocalDateTime deleteDate;
+    private Integer idByUserBeforeDeleting;
 
 
     /*@OneToOne(cascade = CascadeType.ALL)

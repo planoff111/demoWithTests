@@ -14,7 +14,7 @@ public record DocumentDeleteDto(Integer id,
 
         this.id = id;
         this.startDate = startDate != null ? startDate : Date.from(Instant.now());
-        this.messege = "Document has been deleted with ID " + id;
+        this.messege = "Document has been deleted ";
 
 
     }
