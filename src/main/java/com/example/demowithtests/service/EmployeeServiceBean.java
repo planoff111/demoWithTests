@@ -1,6 +1,8 @@
 package com.example.demowithtests.service;
 
 import com.example.demowithtests.domain.Employee;
+import com.example.demowithtests.dto.EmployeDeletedDocumentDto;
+import com.example.demowithtests.dto.EmployeeDto;
 import com.example.demowithtests.repository.EmployeeRepository;
 import com.example.demowithtests.service.emailSevice.EmailSenderService;
 import com.example.demowithtests.util.annotations.entity.ActivateCustomAnnotations;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,14 +61,14 @@ public class EmployeeServiceBean implements EmployeeService {
         return employees;
     }
 
-    public List<Employee> getAllUrainians(){
+    public List<Employee> getAllUrainians() {
         return employeeRepository.findAllUkrainian()
                 .stream()
-                .flatMap(emp -> emp.stream().filter(e-> e.getIsDeleted() ==(Boolean.FALSE)))
+                .flatMap(emp -> emp.stream().filter(e -> e.getIsDeleted() == (Boolean.FALSE)))
                 .collect(Collectors.toList());
     }
 
-    public List<Employee> getAllLatvians(){
+    public List<Employee> getAllLatvians() {
         return employeeRepository.findAllLatvians()
                 .stream()
                 .filter(ent -> ent.getIsDeleted() == (Boolean.FALSE))
@@ -79,8 +82,9 @@ public class EmployeeServiceBean implements EmployeeService {
         employeeRepository.saveAllAndFlush(russians);
 
     }
-    public void setIsDeletedToFalse(List<Employee> employees){
-        employees.stream().forEach(e-> e.setIsDeleted(Boolean.FALSE));
+
+    public void setIsDeletedToFalse(List<Employee> employees) {
+        employees.stream().forEach(e -> e.setIsDeleted(Boolean.FALSE));
         employeeRepository.saveAllAndFlush(employees);
     }
 
@@ -106,9 +110,16 @@ public class EmployeeServiceBean implements EmployeeService {
         var employee = employeeRepository.findById(id)
                 // .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
                 .orElseThrow(ResourceNotFoundException::new);
+
+        if (employee.getDocument().getIsDeleted() == Boolean.TRUE) {
+            employee.setDocument(null);
+
+        }
+
         if (employee.getIsDeleted() == Boolean.TRUE) {
             throw new EntityNotFoundException("Employee was deleted with id = " + id);
         }
+
         return employee;
     }
 
@@ -123,6 +134,18 @@ public class EmployeeServiceBean implements EmployeeService {
                     return employeeRepository.save(entity);
                 })
                 .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
+    }
+
+    @Override
+    public Employee deleteDocument(Integer id) {
+        return employeeRepository.findById(id).
+                map(entity -> {
+                    entity.getDocument().setIsDeleted(Boolean.TRUE);
+                    entity.getDocument().setDeleteDate(LocalDateTime.now());
+                    entity.getDocument().setIdByUserBeforeDeleting(entity.getId());
+                    return employeeRepository.save(entity);
+                }).orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
+
     }
 
     @Override

@@ -32,6 +32,8 @@ public interface EmployeeService {
     List<Employee> getAllLatvians();
     public List<Employee> getAllUrainians();
 
+    public Employee deleteDocument(Integer id);
+
 
     //Page<Employee> findByCountryContaining(String country, Pageable pageable);
 
@@ -68,5 +70,7 @@ public interface EmployeeService {
     List<Employee> findByNameContaining(String name);
 
     void updateEmployeeByName(String name, Integer id);
+
+
 
 }

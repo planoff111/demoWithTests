@@ -1,12 +1,10 @@
 package com.example.demowithtests.dto;
 
-import com.example.demowithtests.domain.Document;
 import com.example.demowithtests.domain.Gender;
 import com.example.demowithtests.util.annotations.dto.BlockedEmailDomains;
 import com.example.demowithtests.util.annotations.dto.NameNoNumbersFormed;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -17,8 +15,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-public record EmployeeDto(
-
+public record EmployeDeletedDocumentDto(
         @Schema(description = "Id in DB")
         Integer id,
 
@@ -43,20 +40,18 @@ public record EmployeeDto(
 
         Gender gender,
 
-        @Valid
-        Set<AddressDto> addresses,
 
-        Document document
+
+        DocumentDeleteDto document
 ) {
 
-    public EmployeeDto(Integer id,
+    public EmployeDeletedDocumentDto(Integer id,
                        String name,
                        String country,
                        String email,
                        Date startDate,
                        Gender gender,
-                       Set<AddressDto> addresses,
-                       Document document) {
+                       DocumentDeleteDto document) {
 
         this.id = id;
         this.name = name;
@@ -64,7 +59,6 @@ public record EmployeeDto(
         this.email = email;
         this.startDate = startDate != null ? startDate : Date.from(Instant.now());
         this.gender = gender;
-        this.addresses = addresses != null ? addresses : new HashSet<>();
         this.document = document;
 
     }

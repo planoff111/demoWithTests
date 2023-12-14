@@ -1,6 +1,7 @@
 package com.example.demowithtests.domain;
 
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -24,14 +25,18 @@ public final class Document {
     @Builder.Default
     private String uuid = UUID.randomUUID().toString();
 
-    private LocalDateTime expireDate;
+    private LocalDateTime expireDate = LocalDateTime.now().plusYears(5);
 
     @Builder.Default
     private Boolean isHandled = Boolean.FALSE;
 
-    @ToString.Exclude
-    @OneToOne(mappedBy = "document")
-    private Employee employee;
+    private Boolean isDeleted = Boolean.FALSE;
+    @Column(name = "date_add_document")
+    private LocalDateTime dateAddDocument = LocalDateTime.now();
+    @Column(name = "date_delete_document")
+    private LocalDateTime deleteDate;
+    private Integer idByUserBeforeDeleting;
+
 
     private Boolean isDeleted = Boolean.FALSE;
     @Column(name = "date_add_document")

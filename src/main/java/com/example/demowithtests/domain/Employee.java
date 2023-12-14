@@ -37,8 +37,8 @@ public final class Employee {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @OneToOne  (cascade = CascadeType.ALL)
-    @JoinColumn(name = "document_id", referencedColumnName = "id")
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "document_id")
     private Document document;
 
     private Boolean isDeleted = Boolean.FALSE;

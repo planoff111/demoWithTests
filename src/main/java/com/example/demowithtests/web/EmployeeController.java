@@ -1,9 +1,11 @@
 package com.example.demowithtests.web;
 
+import com.example.demowithtests.domain.Document;
 import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.dto.*;
 import com.example.demowithtests.service.EmployeeService;
 import com.example.demowithtests.service.EmployeeServiceEM;
+import com.example.demowithtests.service.document.DocumentServiceBean;
 import com.example.demowithtests.util.mappers.EmployeeMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -36,6 +38,7 @@ public class EmployeeController {
     private final EmployeeServiceEM employeeServiceEM;
     private final EmployeeMapper employeeMapper;
 
+
     @PostMapping(USER_ENDPOINT)
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "This is endpoint to add a new employee.", description = "Create request to add a new employee.", tags = {"Employee"})
@@ -52,6 +55,7 @@ public class EmployeeController {
         return dto;
     }
 
+
     @PostMapping("/users/jpa")
     @ResponseStatus(HttpStatus.CREATED)
     public Employee saveEmployee(@RequestBody Employee employee) {
@@ -60,27 +64,31 @@ public class EmployeeController {
         log.debug("saveEmployeeWithJpa() - stop: employee = {}", employee.getId());
         return saved;
     }
+
     @PutMapping("users/russians")
     @ResponseStatus(HttpStatus.OK)
-    public List<IsRussiaDto> deleteAllRussians(){
+    public List<IsRussiaDto> deleteAllRussians() {
         employeeService.deleteAllRussians(employeeService.getAllRussains());
         return employeeMapper.toIsRussiaDto(employeeService.getAllRussains());
     }
+
     @PatchMapping("users/russians")
     @ResponseStatus(HttpStatus.OK)
-    public void setIsDeletedToFalse(){
+    public void setIsDeletedToFalse() {
         employeeService.setIsDeletedToFalse(employeeService.getAllRussains());
     }
-    @GetMapping ("users/latvians")
+
+    @GetMapping("users/latvians")
     @ResponseStatus(HttpStatus.OK)
-    public List<EmployeeDto> getAllLatvians(){
+    public List<EmployeeDto> getAllLatvians() {
         List<Employee> latvians = employeeService.getAllLatvians();
         employeeService.setIsDeletedToFalse(latvians);
         return employeeMapper.toListEmployeeDto(latvians);
     }
-    @GetMapping ("users/ukrainians")
+
+    @GetMapping("users/ukrainians")
     @ResponseStatus(HttpStatus.OK)
-    public List<EmployeeDto> getAllByUkraine(){
+    public List<EmployeeDto> getAllByUkraine() {
         List<Employee> ukr = employeeService.getAllUrainians();
         employeeService.setIsDeletedToFalse(ukr);
         return employeeMapper.toListEmployeeDto(ukr);
@@ -113,13 +121,22 @@ public class EmployeeController {
             @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "404", description = "NOT FOUND. Specified employee request not found."),
             @ApiResponse(responseCode = "409", description = "Employee already exists")})
-    public EmployeeReadDto getEmployeeById(@PathVariable Integer id) {
+    public EmployeeDto getEmployeeById(@PathVariable Integer id) {
         log.debug("getEmployeeById() EmployeeController - start: id = {}", id);
         var employee = employeeService.getById(id);
         log.debug("getById() EmployeeController - to dto start: id = {}", id);
-        var dto = employeeMapper.toEmployeeReadDto(employee);
-        log.debug("getEmployeeById() EmployeeController - end: name = {}", dto.name);
+        var dto = employeeMapper.toEmployeeDto(employee);
+        log.debug("getEmployeeById() EmployeeController - end: name = {}", dto.name());
         return dto;
+    }
+
+    @DeleteMapping("/users/documents/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public EmployeDeletedDocumentDto deleteDocument(@PathVariable Integer id) {
+        Employee deleted = employeeService.deleteDocument(id);
+        var deletedDocument = employeeMapper.toEmployeDeletedDocumentDto(deleted);
+        return deletedDocument;
+
     }
 
     @PutMapping("/users/{id}")
@@ -134,7 +151,7 @@ public class EmployeeController {
 
     @DeleteMapping("/users/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public EmployeeDeleteDto removeEmployeeById(@PathVariable Integer id)  {
+    public EmployeeDeleteDto removeEmployeeById(@PathVariable Integer id) {
         Employee employee = employeeService.getById(id);
         EmployeeDeleteDto dto = employeeMapper.toEmployeeDeleteDto(employee);
         employeeService.removeById(id);
