@@ -38,9 +38,6 @@ public final class Document {
     private Integer idByUserBeforeDeleting;
 
 
-    private Boolean isDeleted = Boolean.FALSE;
-    @Column(name = "date_add_document")
-    private LocalDateTime dateAddDocument = LocalDateTime.now();
 
 
     /*@OneToOne(cascade = CascadeType.ALL)
